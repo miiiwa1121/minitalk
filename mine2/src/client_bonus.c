@@ -6,65 +6,124 @@
 /*   By: mtsubasa <mtsubasa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 04:33:07 by mtsubasa          #+#    #+#             */
-/*   Updated: 2024/12/22 11:22:36 by mtsubasa         ###   ########.fr       */
+/*   Updated: 2024/12/22 11:44:30 by mtsubasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+// #include "../include/minitalk_bonus.h"
+
+// void	signal_handler(int signal)
+// {
+// 	if (signal == SIGUSR1 || signal == SIGUSR2)
+// 		write(1, "SIGUSR!!\n", 9);
+// }
+
+// void	send_message(int pid, char c)
+// {
+// 	int	bit;
+
+// 	bit = 0;
+// 	while (bit < 8)
+// 	{
+// 		if ((c & (1 << bit)) != 0)
+// 		{
+// 			if (kill(pid, SIGUSR1) == -1)
+// 				error_handler("Kill error", "SIGUSR1");
+// 		}
+// 		else
+// 		{
+// 			if (kill(pid, SIGUSR2) == -1)
+// 				error_handler("Kill error", "SIGUSR2");
+// 		}
+// 		usleep(WAIT_TIME);
+// 		bit++;
+// 	}
+// }
+
+// int	main(int ac, char **av)
+// {
+// 	t_sa	sa;
+// 	int		pid;
+// 	int		index;
+
+// 	if (ac != 3)
+// 		error_handler("Invalid arguments", "Usage: ./client [PID] [message]");
+// 	if (!bool_atoi(av[1], &pid))
+// 		error_handler("Invalid PID", "PID must be a positive integer");
+// 	if (pid <= 0)
+// 		error_handler("Invalid PID", "PID must be a positive integer");
+// 	sa.sa_handler = signal_handler;
+// 	sigemptyset(&sa.sa_mask);
+// 	if (sigaddset(&sa.sa_mask, SIGUSR1) == -1
+// 		|| sigaddset(&sa.sa_mask, SIGUSR2) == -1)
+// 		error_handler("Sigaddset error", NULL);
+// 	if (sigaction(SIGUSR1, &sa, NULL) == -1
+// 		|| sigaction(SIGUSR2, &sa, NULL) == -1)
+// 		error_handler("Sigaction error", NULL);
+// 	sa.sa_flags = 0;
+// 	index = 0;
+// 	while (av[2][index])
+// 		send_message(pid, av[2][index++]);
+// 	send_message(pid, '\n');
+// 	usleep(WAIT_TIME);
+// 	return (0);
+// }
+
 #include "../include/minitalk_bonus.h"
 
-void	signal_handler(int signal)
+void signal_handler(int signal)
 {
-	if (signal == SIGUSR1 || signal == SIGUSR2)
-		write(1, "SIGUSR!!\n", 9);
+    if (signal == SIGUSR1 || signal == SIGUSR2)
+        write(1, "SIGUSR!!\n", 9);
 }
 
-void	send_message(int pid, char c)
+void send_message(int pid, char c)
 {
-	int	bit;
+    int bit;
 
-	bit = 0;
-	while (bit < 8)
-	{
-		if ((c & (1 << bit)) != 0)
-		{
-			if (kill(pid, SIGUSR1) == -1)
-				error_handler("Kill error", "SIGUSR1");
-		}
-		else
-		{
-			if (kill(pid, SIGUSR2) == -1)
-				error_handler("Kill error", "SIGUSR2");
-		}
-		usleep(WAIT_TIME);
-		bit++;
-	}
+    bit = 0;
+    while (bit < 8)
+    {
+        if ((c & (1 << bit)) != 0)
+        {
+            if (kill(pid, SIGUSR1) == -1)
+                error_handler("Kill error", "SIGUSR1");
+        }
+        else
+        {
+            if (kill(pid, SIGUSR2) == -1)
+                error_handler("Kill error", "SIGUSR2");
+        }
+        usleep(WAIT_TIME);
+        bit++;
+    }
 }
 
-int	main(int ac, char **av)
+int main(int ac, char **av)
 {
-	t_sa	sa;
-	int		pid;
-	int		index;
+    t_sa sa;
+    int pid;
+    int index;
 
-	if (ac != 3)
-		error_handler("Invalid arguments", "Usage: ./client [PID] [message]");
-	if (!bool_atoi(av[1], &pid))
-		error_handler("Invalid PID", "PID must be a positive integer");
-	if (pid <= 0)
-		error_handler("Invalid PID", "PID must be a positive integer");
-	sa.sa_handler = signal_handler;
-	sigemptyset(&sa.sa_mask);
-	if (sigaddset(&sa.sa_mask, SIGUSR1) == -1
-		|| sigaddset(&sa.sa_mask, SIGUSR2) == -1)
-		error_handler("Sigaddset error", NULL);
-	if (sigaction(SIGUSR1, &sa, NULL) == -1
-		|| sigaction(SIGUSR2, &sa, NULL) == -1)
-		error_handler("Sigaction error", NULL);
-	sa.sa_flags = 0;
-	index = 0;
-	while (av[2][index])
-		send_message(pid, av[2][index++]);
-	send_message(pid, '\n');
-	usleep(WAIT_TIME);
-	return (0);
+    if (ac != 3)
+        error_handler("Invalid arguments", "Usage: ./client [PID] [message]");
+    if (!bool_atoi(av[1], &pid))
+        error_handler("Invalid PID", "PID must be a positive integer");
+    if (pid <= 0)
+        error_handler("Invalid PID", "PID must be a positive integer");
+
+    sa.sa_handler = signal_handler;
+    sigemptyset(&sa.sa_mask);
+    if (sigaddset(&sa.sa_mask, SIGUSR1) == -1 || sigaddset(&sa.sa_mask, SIGUSR2) == -1)
+        error_handler("Sigaddset error", NULL);
+    if (sigaction(SIGUSR1, &sa, NULL) == -1 || sigaction(SIGUSR2, &sa, NULL) == -1)
+        error_handler("Sigaction error", NULL);
+
+    sa.sa_flags = 0;
+    index = 0;
+    while (av[2][index])
+        send_message(pid, av[2][index++]);
+    send_message(pid, '\n');
+    usleep(WAIT_TIME);
+    return 0;
 }

@@ -73,8 +73,10 @@ LIBFT_SRC = $(LIBFT_DIR)/ft_atoi.c \
             $(LIBFT_DIR)/ft_strrchr.c \
             $(LIBFT_DIR)/ft_strtrim.c \
             $(LIBFT_DIR)/ft_substr.c \
-            $(LIBFT_DIR)/ft_tolower.c \
-            $(LIBFT_DIR)/ft_toupper.c
+            $(LIBFT_DIR)/ft_toupper.c \
+            $(LIBFT_DIR)/error_handler.c \
+            $(LIBFT_DIR)/bool_atoi.c \
+            $(LIBFT_DIR)/ft_isspace.c
 
 # すべてのソースファイルとオブジェクトファイル
 SRC_FILES = $(FT_PRINTF_SRC) $(GNL_SRC) $(LIBFT_SRC)
@@ -90,6 +92,7 @@ X = "\033[0m"
 # ルール
 # ========================================================
 
+# デフォルトのターゲット
 all: $(NAME)
 
 # ライブラリを作成
@@ -109,6 +112,7 @@ clean:
 	@rm -rf $(OBJ_DIR)
 	@echo $(R) "Object files removed." $(X)
 
+# フルクリーンアップ
 fclean: clean
 	@rm -f $(NAME)
 	@echo $(R) "$(NAME) removed." $(X)

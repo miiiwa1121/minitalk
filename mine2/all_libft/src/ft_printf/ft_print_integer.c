@@ -1,29 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minitalk.h                                         :+:      :+:    :+:   */
+/*   ft_print_integer.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mtsubasa <mtsubasa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/21 04:33:00 by mtsubasa          #+#    #+#             */
-/*   Updated: 2024/12/22 11:22:12 by mtsubasa         ###   ########.fr       */
+/*   Created: 2024/07/13 23:10:24 by mtsubasa          #+#    #+#             */
+/*   Updated: 2024/12/22 11:07:33 by mtsubasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINITALK_H
-# define MINITALK_H
+#include "../../include/ft_printf.h"
 
-# include "../all_libft/include/libft.h"
-# include <signal.h>
+int	ft_print_integer(int n)
+{
+	int		len;
+	char	*num;
 
-typedef struct sigaction	t_sa;
-
-# ifdef __linux__
-#  define WAIT_TIME 2000
-# endif
-
-# ifdef __APPLE__
-#  define WAIT_TIME 50
-# endif
-
-#endif
+	len = 0;
+	num = ft_itoa(n);
+	if (!num)
+		return (0);
+	len = ft_print_string(num);
+	free(num);
+	return (len);
+}

@@ -6,11 +6,11 @@
 /*   By: mtsubasa <mtsubasa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 04:33:07 by mtsubasa          #+#    #+#             */
-/*   Updated: 2024/12/21 04:33:08 by mtsubasa         ###   ########.fr       */
+/*   Updated: 2024/12/22 11:22:36 by mtsubasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minitalk_bonus.h"
+#include "../include/minitalk_bonus.h"
 
 void	signal_handler(int signal)
 {

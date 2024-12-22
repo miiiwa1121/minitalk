@@ -6,11 +6,11 @@
 /*   By: mtsubasa <mtsubasa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 04:33:16 by mtsubasa          #+#    #+#             */
-/*   Updated: 2024/12/21 04:33:20 by mtsubasa         ###   ########.fr       */
+/*   Updated: 2024/12/22 11:22:54 by mtsubasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minitalk.h"
+#include "../include/minitalk.h"
 
 void	send_message(int pid, char c)
 {

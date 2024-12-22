@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   server_bonus.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jay <jay@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: mtsubasa <mtsubasa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 15:22:14 by jtakahas          #+#    #+#             */
-/*   Updated: 2024/06/15 21:04:51 by jay              ###   ########.fr       */
+/*   Updated: 2024/12/22 11:22:47 by mtsubasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minitalk_bonus.h"
+#include "../include/minitalk_bonus.h"
 
 void	signal_handler(int signal, siginfo_t *info, void *context)
 {

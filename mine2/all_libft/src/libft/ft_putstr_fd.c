@@ -1,29 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minitalk.h                                         :+:      :+:    :+:   */
+/*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mtsubasa <mtsubasa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/21 04:33:00 by mtsubasa          #+#    #+#             */
-/*   Updated: 2024/12/22 11:22:12 by mtsubasa         ###   ########.fr       */
+/*   Created: 2024/06/22 23:40:49 by mtsubasa          #+#    #+#             */
+/*   Updated: 2024/12/22 11:09:07 by mtsubasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINITALK_H
-# define MINITALK_H
+#include <unistd.h>
+#include "../../include/libft.h"
 
-# include "../all_libft/include/libft.h"
-# include <signal.h>
+void	ft_putstr_fd(char *s, int fd)
+{
+	int	len;
 
-typedef struct sigaction	t_sa;
+	len = 0;
+	if (!s)
+		return ;
+	len = ft_strlen((const char *)s);
+	write(fd, s, len);
+}
 
-# ifdef __linux__
-#  define WAIT_TIME 2000
-# endif
+// int main(void)
+// {
+//     char *s;
 
-# ifdef __APPLE__
-#  define WAIT_TIME 50
-# endif
-
-#endif
+//     s = "Hello, world!";
+//     ft_putstr_fd(s, 1);
+//     return (0);
+// }

@@ -14,6 +14,3 @@ make fclean
 
 再ビルド:
 make re
-
-コーディング規約チェック:
-make norm

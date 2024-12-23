@@ -6,7 +6,7 @@
 /*   By: mtsubasa <mtsubasa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/21 21:06:41 by mtsubasa          #+#    #+#             */
-/*   Updated: 2024/08/02 03:21:07 by mtsubasa         ###   ########.fr       */
+/*   Updated: 2024/12/23 18:28:21 by mtsubasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,4 +32,3 @@ void	ft_bzero(void *s, size_t n)
 // 	printf("%s\n", str);
 // 	return (0);
 // }
-

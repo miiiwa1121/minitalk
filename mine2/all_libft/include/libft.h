@@ -6,16 +6,15 @@
 /*   By: mtsubasa <mtsubasa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/11 21:34:05 by mtsubasa          #+#    #+#             */
-/*   Updated: 2024/12/22 12:17:27 by mtsubasa         ###   ########.fr       */
+/*   Updated: 2024/12/23 18:34:03 by mtsubasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LIBFT_H
 # define LIBFT_H
+# include <stdbool.h> // bool 型を使用するために追加
 # include <stdlib.h>
 # include <unistd.h>
-# include <stdbool.h>  // bool 型を使用するために追加
-
 
 typedef struct s_list
 {
@@ -68,15 +67,9 @@ void				ft_lstclear(t_list **lst, void (*del)(void *));
 void				ft_lstiter(t_list *lst, void (*f)(void *));
 t_list				*ft_lstmap(t_list *lst, void *(*f)(void *),
 						void (*del)(void *));
-
-// ft_printf 関数のプロトタイプ
-int                 ft_printf(const char *format, ...);
-
-// error_handler 関数のプロトタイプ（新たに作成する場合）
+int					ft_printf(const char *format, ...);
 void				error_handler(const char *message, const char *usage);
-
-bool	 			bool_atoi(char *str, int *nbr);
-
-int 				ft_isspace(int c);
+bool				bool_atoi(char *str, int *nbr);
+int					ft_isspace(int c);
 
 #endif

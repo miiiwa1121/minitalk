@@ -12,63 +12,11 @@
 │   │   └── libft.h
 │   └── src
 │       ├── ft_printf
-│       │   ├── ft_print_char.c
-│       │   ├── ft_print_hex.c
-│       │   ├── ft_print_integer.c
-│       │   ├── ft_print_pointer.c
-│       │   ├── ft_print_string.c
-│       │   ├── ft_print_unsigned.c
-│       │   └── ft_printf.c
 │       ├── gnl
-│       │   ├── get_next_line_bonus.c
-│       │   └── get_next_line_utils_bonus.c
 │       └── libft
 │           ├── bool_atoi.c
 │           ├── error_handler.c
-│           ├── ft_atoi.c
-│           ├── ft_bzero.c
-│           ├── ft_calloc.c
-│           ├── ft_isalnum.c
-│           ├── ft_isalpha.c
-│           ├── ft_isascii.c
-│           ├── ft_isdigit.c
-│           ├── ft_isprint.c
 │           ├── ft_isspace.c
-│           ├── ft_itoa.c
-│           ├── ft_lstadd_back.c
-│           ├── ft_lstadd_front.c
-│           ├── ft_lstclear.c
-│           ├── ft_lstdelone.c
-│           ├── ft_lstiter.c
-│           ├── ft_lstlast.c
-│           ├── ft_lstmap.c
-│           ├── ft_lstnew.c
-│           ├── ft_lstsize.c
-│           ├── ft_memchr.c
-│           ├── ft_memcmp.c
-│           ├── ft_memcpy.c
-│           ├── ft_memmove.c
-│           ├── ft_memset.c
-│           ├── ft_putchar_fd.c
-│           ├── ft_putendl_fd.c
-│           ├── ft_putnbr_fd.c
-│           ├── ft_putstr_fd.c
-│           ├── ft_split.c
-│           ├── ft_strchr.c
-│           ├── ft_strdup.c
-│           ├── ft_striteri.c
-│           ├── ft_strjoin.c
-│           ├── ft_strlcat.c
-│           ├── ft_strlcpy.c
-│           ├── ft_strlen.c
-│           ├── ft_strmapi.c
-│           ├── ft_strncmp.c
-│           ├── ft_strnstr.c
-│           ├── ft_strrchr.c
-│           ├── ft_strtrim.c
-│           ├── ft_substr.c
-│           ├── ft_tolower.c
-│           └── ft_toupper.c
 ├── include
 │   ├── minitalk.h
 │   └── minitalk_bonus.h
@@ -143,4 +91,69 @@ c |= (1 << bit);
 ---
 
 Feel free to contribute to or ask questions about the project!
+
+# Minitalk (日本語版)
+
+## ビルドとクリーンコマンド
+### ビルド
+- 全ビルド: `make`
+- ボーナス付きビルド: `make bonus`
+
+### クリーン
+- 中間ファイル削除: `make clean`
+- 完全クリーンアップ: `make fclean`
+
+### 再ビルド
+- 全て再ビルド: `make re`
+
+---
+
+## 主要な概念とコマンド
+
+### コマンド
+- **`kill`**: 指定されたプロセスにシグナルを送信します。
+- **`error_handler`**: プログラム内でエラーが発生した際に処理とメッセージ表示を行う関数。
+- **`usleep`**: プログラムの実行を指定時間（マイクロ秒単位）停止します。
+- **`getpid`**: 現在のプロセスID（PID）を取得します。
+- **`sigemptyset`**: シグナルマスク（シグナルセット）を空に初期化します。
+- **`sigaddset`**: シグナルマスクに特定のシグナルを追加します。
+- **`sigaction`**: 特定のシグナルを受信した際のハンドラーを設定します。
+- **`pause`**: シグナルを受信するまでプログラムを一時停止します。
+
+### 用語
+- **PID**: OSが各プロセスを一意に識別するために割り当てる番号。
+- **シグナル**: UNIX/Linux環境でプロセス間通信やイベント通知を行う仕組み。ソフトウェア割り込みとして動作します。
+- **システムコール**: ユーザープログラムがOSのカーネル機能を利用するためのインターフェース。例: ファイル操作、プロセス管理、ネットワーク通信。
+- **シグナルマスク**: 特定のシグナルを一時的にブロック（受信しないように）する仕組み。
+
+---
+
+## メモ
+### シグナル
+シグナルは、UNIX/Linuxにおけるソフトウェア割り込みの一種で、プロセス間の通信やシステムからプロセスへの通知に使用されます。例えば、子プロセスの終了通知やエラーの通知などに利用されます。
+
+### システムコール
+システムコールは、ユーザープログラムがOSカーネルのサービスを要求するインターフェースで、ファイルアクセスやプロセス管理、入出力操作を実現します。
+
+### シグナルマスク
+シグナルマスクを使うことで、特定のシグナルを一時的にブロックし、重要なコードが中断されることを防ぎます。
+
+---
+
+## 質問
+### クライアントコード
+```c
+if ((c & (1 << bit)) != 0):
+```
+- 質問: この条件式は、文字のビットをどのようにチェックしているのですか？
+
+### サーバーコード
+```c
+c |= (1 << bit);
+```
+- 質問: この行は、受信したシグナルビットから文字をどのように再構成しているのですか？
+
+---
+
+プロジェクトに関する質問や貢献をお待ちしています！
 

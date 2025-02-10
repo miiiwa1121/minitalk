@@ -138,6 +138,26 @@ Feel free to contribute to or ask questions about the project!
 ### シグナルマスク
 シグナルマスクを使うことで、特定のシグナルを一時的にブロックし、重要なコードが中断されることを防ぎます。
 
+### 構造体
+struct sigactionは、UNIX系OS（Linux, macOS など）で シグナル処理 を設定するための構造体です。
+
+例
+'''
+struct sigaction {
+    void (*sa_handler)(int);   /* シグナルハンドラ関数のポインタ */
+    void (*sa_sigaction)(int, siginfo_t *, void *); /* 詳細情報を取得できるハンドラ */
+    sigset_t sa_mask;          /* シグナルハンドラ実行中にブロックするシグナルのマスク */
+    int sa_flags;              /* シグナルハンドラの動作を決定するフラグ */
+};
+'''
+
+フィールドの説明
+フィールド名        説明
+sa_handler          シグナルを受信したときに呼ばれる関数（簡易版）
+sa_sigaction        siginfo_t を使う詳細なハンドラ（SA_SIGINFO フラグを有効にすると使用可能）
+sa_mask	            ハンドラ実行中にブロックするシグナルのセット
+sa_flags	        ハンドラの動作を制御するフラグ
+
 ---
 
 ## 質問
@@ -154,6 +174,3 @@ c |= (1 << bit);
 - 質問: この行は、受信したシグナルビットから文字をどのように再構成しているのですか？
 
 ---
-
-プロジェクトに関する質問や貢献をお待ちしています！
-

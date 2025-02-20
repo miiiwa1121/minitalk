@@ -16,7 +16,7 @@
 │       └── libft
 │           ├── bool_atoi.c
 │           ├── error_handler.c
-│           ├── ft_isspace.c
+│           └── ft_isspace.c
 ├── include
 │   ├── minitalk.h
 │   └── minitalk_bonus.h
@@ -29,70 +29,76 @@
 8 directories, 66 files
 ```
 
-## Build and Clean Commands
-### Build
-- Build all: `make`
-- Build with bonus: `make bonus`
-
-### Clean
-- Remove intermediate files: `make clean`
-- Complete cleanup: `make fclean`
-
-### Rebuild
-- Rebuild everything: `make re`
-
----
-
-## Key Concepts and Commands
-
-### Commands
-- **`kill`**: Sends a signal to a specified process.
-- **`error_handler`**: Handles errors and displays messages within the program.
-- **`usleep`**: Pauses program execution for a specified time in microseconds.
-- **`getpid`**: Retrieves the process ID (PID) of the current process.
-- **`sigemptyset`**: Initializes a signal mask (signal set) to be empty.
-- **`sigaddset`**: Adds a specific signal to the signal mask.
-- **`sigaction`**: Sets up a handler for specific signals.
-- **`pause`**: Suspends the program until a signal is received.
-
-### Terminology
-- **PID**: A unique identifier assigned to each process by the operating system.
-- **Signal**: A mechanism used in UNIX/Linux environments for inter-process communication or to notify a process about an event. Signals act as software interrupts.
-- **System Call**: An interface through which user programs request services from the operating system kernel. Examples include file operations, process management, and network communication.
-- **Signal Mask**: A mechanism to temporarily block specific signals from being delivered to a process.
-
----
-
-## Notes
-### Signals
-Signals are a form of software interrupt in UNIX/Linux used for process communication or system notifications. For example, a signal can notify a process that a child process has terminated or that an error occurred.
-
-### System Calls
-System calls provide an interface for user-level programs to request OS kernel services, such as accessing files, managing processes, or performing I/O operations.
-
-### Signal Mask
-Signal masks are used to block specific signals temporarily, ensuring critical sections of code execute without interruptions.
-
----
-
-## Questions
-### Client Code
-```c
-if ((c & (1 << bit)) != 0):
+## 概要
 ```
-- Question: What is the purpose of this condition in checking the bits of a character?
-
-### Server Code
-```c
-c |= (1 << bit);
+シグナル通信を利用してクライアントサーバー型のアプリケーションを作る
 ```
-- Question: How does this line reconstruct the character from received signal bits?
+### １．クライアントサーバー型
 
+> それぞれが個別のプロセスとなる２つの実行ファイルを作成
+- Makefileで二つの実行ファイルを作成する
+> プロセスが分かれているため（シングルプロセスではないため）プロセス間の通信が必要
+- 今回はシグナル通信を使用する
+- プロセス間通信の方法はシグナルの他にも、`パイプ`,`ソケット通信`,`メッセージキュー`などがある。
+
+### ２．シグナル
+
+- シグナルは64種類あり、`kill -l`で一覧を出力できる
+- 今回の課題では、ユーザーに完全に解放されている`(10)SIGUSR1`、`(12)SIGUSR2`のみを利用する。
+
+### ３．シリアル通信的通信
+- 二進数の0・1をそれぞれSIGUSR1・SIGUSR2に割り当てて通信する
+```
+<例>
+char型は１バイトで８ビット
+const char c = 'A'
+A == 0x41(01000001) 
+Aを送るにはバイナリを８回１ビットずつ送ればよい。
+```
+
+### ４．割り込み
+
+#### クライアント
+- 文字を１ビットずつ２種類のシグナルを利用して送信
+- kill(システムコール)を利用する
+
+#### サーバー
+- シグナルを受け取り、文字を復元する
+- signalまたはsigactionを利用する
+
+> ####  signal/sigaction
+- 通常シグナルがプロセスに届く(今回の場合はサーバーに届く)とデフォルトアクションが発生し、プロセス終了が実行される。
+- このプロセス終了に割り込み、シグナルを横取りする形で別の動作をさせるのがsignal/sigaction。
+- sigactionにsignal_handlerを設定することで受け取ったシグナルに応じて元の文字にデコードしていくことができる
+
+### ５．データ欠損の追求
+#### 1. signal関数を使ったと時の問題点
+- 割り込み中にシグナルが発生すると、割り込みの割り込みが発生し、文字化けが起きる
+#### 2. sigactionを使うことで対応する
+- SIGUSR1とSIGUSR2の相互の割り込みを禁止できる
+#### 3. sigaction関数でも解消されない(割り込み禁止なのに文字化けする)
+- ブロックされたシグナルの行方を追う
+#### 4. ブロックされたシグナル
+- 複数のシグナルが発生し、そのシグナルがブロックされていた(処理待ちシグナルが溜まっていた)場合、ブロック解除後に配送されるのはシグナルひとつだけになる。カーネルではシグナルの待機は一つまでとなっているそう
+- 複数のシグナルが処理待ち状態になった場合、配送される順序は不定(SIGUSR1 - SIGUSR2の順でシグナルが送信されてきたとき、一つ目の出力がSIGUSR1になるとは限らない)
+> これらのことからシグナルを貯めるのは難しいとわかる。
+#### 5. まとめられたシグナル
+```
+[コラム]
+シグナル送信元のpidを調べると０から送られていることがある。
+    > これはシグナルがまとめられた時のOSXの不思議な挙動
+    > Linuxもまとめられるがpidは一つ目の送信元となる
+```
+- シグナルはまとめられた時点でデータは欠損してしまう。
+>  #### 対策
+- sleepを入れてごまかす > 環境や状況によって適正なsleep量が変わる
+- bitごとにACKを返信させる > かなり堅牢な通信
+```
+[堅牢通信]
+サーバーは、クライアントに受信したことをビットごとに返事する
+クライアントは返事が来たことを確認して次のビットを送信する
+```
 ---
-
-Feel free to contribute to or ask questions about the project!
-
-# Minitalk (日本語版)
 
 ## ビルドとクリーンコマンド
 ### ビルド
@@ -108,9 +114,7 @@ Feel free to contribute to or ask questions about the project!
 
 ---
 
-## 主要な概念とコマンド
-
-### コマンド
+## 関数
 - **`kill`**: 指定されたプロセスにシグナルを送信します。
 - **`error_handler`**: プログラム内でエラーが発生した際に処理とメッセージ表示を行う関数。
 - **`usleep`**: プログラムの実行を指定時間（マイクロ秒単位）停止します。
@@ -120,7 +124,9 @@ Feel free to contribute to or ask questions about the project!
 - **`sigaction`**: 特定のシグナルを受信した際のハンドラーを設定します。
 - **`pause`**: シグナルを受信するまでプログラムを一時停止します。
 
-### 用語
+---
+
+## 用語
 - **PID**: OSが各プロセスを一意に識別するために割り当てる番号。
 - **シグナル**: UNIX/Linux環境でプロセス間通信やイベント通知を行う仕組み。ソフトウェア割り込みとして動作します。
 - **システムコール**: ユーザープログラムがOSのカーネル機能を利用するためのインターフェース。例: ファイル操作、プロセス管理、ネットワーク通信。

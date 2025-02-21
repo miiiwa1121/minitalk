@@ -6,7 +6,7 @@
 /*   By: mtsubasa <mtsubasa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 04:33:31 by mtsubasa          #+#    #+#             */
-/*   Updated: 2024/12/25 03:33:36 by mtsubasa         ###   ########.fr       */
+/*   Updated: 2025/02/21 10:01:09 by mtsubasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,15 +39,16 @@ int	main(int ac, char **av)
 //サーバーのプロセスIDを表示
 	ft_printf("Server PID: %d\n", getpid());
 //シグナルハンドラの設定	
-	sa.sa_handler = signal_handler;
+	sa.sa_handler = signal_handler;//シグナルを受信した際に呼び出される関数ポインタに、
+	// 実行する関数を設定
 //シグナル処理の設定（シグナルマスク）を初期化	
 	sigemptyset(&sa.sa_mask);
 //SIGUSR1とSIGUSR2をブロックする	
-	if (sigaddset(&sa.sa_mask, SIGUSR1) == -1
+	if (sigaddset(&sa.sa_mask, SIGUSR1) == -1//シグナルマスクにSIGUSR1とSIGUSR2を追加
 		|| sigaddset(&sa.sa_mask, SIGUSR2) == -1)
 		error_handler("Sigaddset error", NULL);
 //シグナル処理の設定を有効にする
-	if (sigaction(SIGUSR1, &sa, NULL) == -1
+	if (sigaction(SIGUSR1, &sa, NULL) == -1//SIGUSR1とSIGUSR2のシグナル処理を設定
 		|| sigaction(SIGUSR2, &sa, NULL) == -1)
 		error_handler("Sigaction error", NULL);
 //シグナル処理の設定を初期化	

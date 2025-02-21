@@ -6,7 +6,7 @@
 /*   By: mtsubasa <mtsubasa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 14:22:19 by jtakahas          #+#    #+#             */
-/*   Updated: 2024/12/22 12:14:09 by mtsubasa         ###   ########.fr       */
+/*   Updated: 2025/02/21 05:27:03 by mtsubasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static int	check_plus_minus(char *str)
 	{
 		if (*str == '-')
 			sign = -1;
-		str++;
+		str++;//符号をスキップ
 	}
 	return (sign);
 }
@@ -45,26 +45,26 @@ static bool	is_int(long long num, int sign)
 
 bool	bool_atoi(char *str, int *nbr)
 {
-	int			sign;
-	long long	ans;
+	int			sign;//符号を保持
+	long long	ans;//計算結果を保持
 
 	if (str == NULL)
 		return (false);
 	sign = 1;
 	ans = 0;
-	str = pass_space(str);
-	sign = check_plus_minus(str);
+	str = pass_space(str);//空白をスキップ
+	sign = check_plus_minus(str);//符号を取得
 	if (*str == '\0')
 		return (false);
 	while (*str)
 	{
-		if (!ft_isdigit(*str))
+		if (!ft_isdigit(*str))//数字でない場合
 			return (false);
-		ans = (*str - '0') + (ans * 10);
-		if (!is_int(ans, sign))
+		ans = (*str - '0') + (ans * 10);//桁を上げながら整数化していく
+		if (!is_int(ans, sign))//intの範囲外の場合
 			return (false);
 		str++;
 	}
-	*nbr = ans * sign;
+	*nbr = ans * sign;//符号を反映
 	return (true);
 }

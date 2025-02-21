@@ -40,7 +40,7 @@ X = "\033[0m"   # リセット
 # ターゲット定義
 # ========================================================
 
-all: $(LIBFT_NAME) server client
+all: $(LIBFT_NAME) server client 
 
 server: $(SERVER_OBJ)
 	@$(CC) $(CFLAGS) $(SERVER_OBJ) $(LIBFT_NAME) -o server

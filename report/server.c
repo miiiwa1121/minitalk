@@ -6,7 +6,7 @@
 /*   By: mtsubasa <mtsubasa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 04:33:31 by mtsubasa          #+#    #+#             */
-/*   Updated: 2025/02/21 10:01:09 by mtsubasa         ###   ########.fr       */
+/*   Updated: 2025/03/04 17:38:02 by mtsubasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,19 @@
 
 void	signal_handler(int signal)
 {
+	//1bitずつ受信して1バイトそろった時点で文字に変換するため、static変数を使用
 	static int	bit;//処理中のビットの位置を保持
 	static int	c;//受信中の文字のビット情報を保持
 
 	if (signal == SIGUSR1)//ビットが１の場合
-		c |= (1 << bit);
-	bit++;
+		c |= (1 << bit);//cに１を追加(bit 番目のビットを 1 にする ためのビット操作)
+
+	bit++;//次のビットに移動 & ビット数をカウント
+
 	if (bit == 8)//８ビット分の処理が終わったら
 	{
-		write(1, &c, 1);//cに蓄積した８ビット分にバイナリを文字として出力
-		bit = 0;
+		write(1, &c, 1);//cに蓄積した８ビット分にバイナリを文字として出力(標準出力、メモリアドレス、1バイト(8ビット))
+		bit = 0;//リセット
 		c = 0;//リセット
 	}
 }
@@ -32,27 +35,38 @@ int	main(int ac, char **av)
 {
 	t_sa	sa;//シグナル処理の設定を保持する構造体
 
-//このプログラムはサーバー側のプログラムであるため、引数は不要
-	(void)av;//未使用の引数を無視
+	(void)av;//このプログラムはサーバー側のプログラムであるため、引数は不要(未使用の引数を無視)
 	if (ac != 1)
-		error_handler("Invalid arguments", "Usage: ./server");
-//サーバーのプロセスIDを表示
-	ft_printf("Server PID: %d\n", getpid());
-//シグナルハンドラの設定	
-	sa.sa_handler = signal_handler;//シグナルを受信した際に呼び出される関数ポインタに、
-	// 実行する関数を設定
-//シグナル処理の設定（シグナルマスク）を初期化	
-	sigemptyset(&sa.sa_mask);
-//SIGUSR1とSIGUSR2をブロックする	
-	if (sigaddset(&sa.sa_mask, SIGUSR1) == -1//シグナルマスクにSIGUSR1とSIGUSR2を追加
-		|| sigaddset(&sa.sa_mask, SIGUSR2) == -1)
-		error_handler("Sigaddset error", NULL);
+		error_handler("Invalid arguments", "Usage: ./server");//[./server]のみ受け付ける
+
+	ft_printf("Server PID: %d\n", getpid());//サーバーのプロセスIDを表示
+
+//シグナルハンドラの設定
+	sa.sa_handler = signal_handler;//SIGUSR1とSIGUSR2のシグナルを受信した際にsignal_handler関数を実行するように設定
+
+	sigemptyset(&sa.sa_mask);//シグナル処理の設定（シグナルマスク）を初期化
+//シグナルマスクは、シグナルがハンドラによって処理される間に他のシグナルが受け取られることを防ぐために使用されます。
+//sigemptysetは、このマスクを「空」にする関数であり、初期化して他のシグナルがハンドラによってブロックされないように設定しています。
+//初期化しないと、デフォルトで設定されているシグナルマスクの状態（どのシグナルがブロックされるかが不確定）に依存することになります。
+	
+//SIGUSR1とSIGUSR2をブロックする
+	if (sigaddset(&sa.sa_mask, SIGUSR1) == -1 || sigaddset(&sa.sa_mask, SIGUSR2) == -1)//シグナルマスクにSIGUSR1とSIGUSR2を追加(-1はエラー)
+		error_handler("Sigaddset error", NULL);//sigaddsetが上手くいかなった場合はエラーメッセージを表示してプログラムを終了
+//シグナルマスクに追加することで、signal_handler が SIGUSR1 と SIGUSR2 のシグナルを処理している間、それらのシグナルが再度発生しても無視されるようにします。
+//これにより、シグナルが連続して送られた場合でも、処理中に他のシグナルが混入して予期しない動作をするのを防ぎます。
+
 //シグナル処理の設定を有効にする
-	if (sigaction(SIGUSR1, &sa, NULL) == -1//SIGUSR1とSIGUSR2のシグナル処理を設定
-		|| sigaction(SIGUSR2, &sa, NULL) == -1)
-		error_handler("Sigaction error", NULL);
+	if (sigaction(SIGUSR1, &sa, NULL) == -1	|| sigaction(SIGUSR2, &sa, NULL) == -1)//SIGUSR1とSIGUSR2のシグナル処理を設定(-1はエラー)
+		error_handler("Sigaction error", NULL);//sigactionが上手くいかなかった場合はエラーメッセージを表示してプログラムを終了
+//受信されたときに signal_handler 関数が呼ばれるように設定
+
 //シグナル処理の設定を初期化	
 	sa.sa_flags = 0;
+//シグナルハンドリングの動作に関するオプションを設定するフィールドです。
+//このコードでは、sa_flags を 0 に設定して、特にフラグを設定していません。
+//これにより、デフォルトの挙動（シグナルが同期的に処理される）を使用することになります。
+//もし特別な動作（例えば、非同期処理や再起動など）を希望する場合は、この値を変更します
+
 //無限ループ
 	while (1)
 	{
@@ -61,3 +75,8 @@ int	main(int ac, char **av)
 	}
 	return (0);
 }
+
+１、シグナルを受信したときに signal_handler 関数が呼ばれるように設定しているsigactionとシグナルを受信するまで待機するpauseの関係は何
+２、ハンドラとは
+３，ブロックとは
+４，SIGUSR1 と SIGUSR2 をシグナルマスクに追加することでシグナルを処理している間、それらのシグナルが再度発生しても無視されるようになるのはなぜ

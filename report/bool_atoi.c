@@ -6,7 +6,7 @@
 /*   By: mtsubasa <mtsubasa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 14:22:19 by jtakahas          #+#    #+#             */
-/*   Updated: 2025/02/21 05:27:03 by mtsubasa         ###   ########.fr       */
+/*   Updated: 2025/03/13 15:05:05 by mtsubasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include <limits.h>
 
 static char	*pass_space(char *str)
+
 {
 	while (ft_isspace(*str))
 		str++;

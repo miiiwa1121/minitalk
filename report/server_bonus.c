@@ -6,7 +6,7 @@
 /*   By: mtsubasa <mtsubasa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 15:22:14 by jtakahas          #+#    #+#             */
-/*   Updated: 2025/03/05 23:26:14 by mtsubasa         ###   ########.fr       */
+/*   Updated: 2025/03/17 15:57:02 by mtsubasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	main(int ac, char **av)
 	(void)av;
 	if (ac != 1)
 		error_handler("Invalid arguments", "Usage: ./server");
-	
+
 	ft_printf("Server PID: %d\n", getpid());
 
 	sa.sa_sigaction = signal_handler;

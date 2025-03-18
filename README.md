@@ -156,11 +156,13 @@ Aを送るにはバイナリを８回１ビットずつ送ればよい。
 ```
 int sigemptyset(sigset_t *set);
 ```
+- シグナルセットを初期化するとはフォルダのン中身を一旦すべて捨てるようなこと
 - set : 初期化するシグナルセット
 > ### sigaddset
 ```
 int sigaddset(sigset_t *set, int signum);
 ```
+- 初期化されたシグナルセットに追加するとは、空っぽのフォルダに必要な書類だけといれるようなこと
 - set : シグナルセット
 - signum : 追加するシグナル（例：SIGINT）
 > ### sigaction

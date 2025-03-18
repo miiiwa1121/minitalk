@@ -238,7 +238,13 @@ sigemptyset() や sigaddset() などの関数で操作できる。
 ```
 - `sa_flags` : シグナルハンドラの動作を決める フラグ を設定
 ```
-例えば、SA_RESTART（システムコールの再開）、SA_SIGINFO（詳細情報取得）などのオプションがある。
+SA_RESTART	シグナル受信時に中断されたシステムコールを再開する
+SA_NOCLDSTOP	子プロセスが STOP されたときに SIGCHLD を送らない
+SA_NOCLDWAIT	子プロセスが終了してもゾンビプロセスを作らない
+SA_NODEFER	シグナルハンドラー実行中も同じシグナルを受け取る
+SA_RESETHAND	シグナルハンドラー実行後にデフォルトの動作に戻す
+SA_SIGINFO	シグナル情報を siginfo_t 構造体を通じて渡す
+SA_ONSTACK	代替スタック上でシグナルハンドラーを実行する
 ```
 
 ### siginfo_t
@@ -479,8 +485,12 @@ int	main(int ac, char **av)
 ```
 > A : 構造体である`sa.sa_handler`はシグナルを受け取った時に実行される関数のポインタで、型: `void (*sa_handler)(int)`で宣言されています。したがって、引数を受けることができ、そして`signal_handler`関数のポインタを格納することで、「シグナルが来た時に引数を受け取り`signal_handler`関数に渡す」という条件がそろう
 
-- #### Q :usleepを入れることで、signal_handlerの処理途中に実行停止になることは無いのですか？
+- #### Q : usleepを入れることで、signal_handlerの処理途中に実行停止になることは無いのですか？
 > A : signal_handler は 非同期に実行される ため、通常のコード（pause(); や usleep();）が実行されている最中であっても、シグナルが来たら即座に実行されます。
+
+- #### Q : whileの中をsleep()、pause()、sleep()+pause() のそれぞれの違い
+> A : シグナルを待つだけなら pause()、定期的に処理をしつつ、シグナルを待ちたいなら sleep() + pause()、単にループしながら CPU 負荷を抑えたいなら sleep() でも良い。
+
 
 ### その他
 - #### Q3 : `EXIT_FAILURE`とは何？

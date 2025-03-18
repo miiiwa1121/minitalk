@@ -6,7 +6,7 @@
 /*   By: mtsubasa <mtsubasa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 04:33:16 by mtsubasa          #+#    #+#             */
-/*   Updated: 2025/03/04 17:06:21 by mtsubasa         ###   ########.fr       */
+/*   Updated: 2025/03/19 03:59:58 by mtsubasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	send_message(int pid, char c)//送信関数pidは送信先のプロセスID
 			if (kill(pid, SIGUSR2) == -1)//SIGUSR2を送信
 				error_handler("Kill error", "SIGUSR2");
 		}
-		usleep(WAIT_TIME);//WAIT_TIME分だけ待機
+		usleep(WAIT_TIME);//WAIT_TIME分だけ待機//サーバ側のハンドラ処理時間を考慮して送信間隔を調整
 		bit++;//次のビットに移動
 	}
 }

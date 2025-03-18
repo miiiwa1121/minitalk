@@ -6,7 +6,7 @@
 /*   By: mtsubasa <mtsubasa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 04:33:31 by mtsubasa          #+#    #+#             */
-/*   Updated: 2025/03/04 17:38:02 by mtsubasa         ###   ########.fr       */
+/*   Updated: 2025/03/19 03:59:30 by mtsubasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ int	main(int ac, char **av)
 		error_handler("Sigaddset error", NULL);//sigaddsetが上手くいかなった場合はエラーメッセージを表示してプログラムを終了
 //シグナルマスクに追加することで、signal_handler が SIGUSR1 と SIGUSR2 のシグナルを処理している間、それらのシグナルが再度発生しても無視されるようにします。
 //これにより、シグナルが連続して送られた場合でも、処理中に他のシグナルが混入して予期しない動作をするのを防ぎます。
+//SIGUSR1を受信してシグナルハンドラが実行されている間に、SIGUSR2が発生しても、SIGUSR2は無視されます。そのため、受信するタイミングや順番が大切になる
 
 //シグナル処理の設定を有効にする
 	if (sigaction(SIGUSR1, &sa, NULL) == -1	|| sigaction(SIGUSR2, &sa, NULL) == -1)//SIGUSR1とSIGUSR2のシグナル処理を設定(-1はエラー)
@@ -71,12 +72,8 @@ int	main(int ac, char **av)
 	while (1)
 	{
 		pause();//シグナルを受信するまで待機
-		usleep(WAIT_TIME);//WAIT_TIME分だけ待機
+		usleep(WAIT_TIME);//WAIT_TIME分だけ待機//この間にハンドラ処理を終わらせる
 	}
 	return (0);
 }
 
-１、シグナルを受信したときに signal_handler 関数が呼ばれるように設定しているsigactionとシグナルを受信するまで待機するpauseの関係は何
-２、ハンドラとは
-３，ブロックとは
-４，SIGUSR1 と SIGUSR2 をシグナルマスクに追加することでシグナルを処理している間、それらのシグナルが再度発生しても無視されるようになるのはなぜ

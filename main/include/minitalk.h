@@ -6,7 +6,7 @@
 /*   By: mtsubasa <mtsubasa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 04:33:00 by mtsubasa          #+#    #+#             */
-/*   Updated: 2025/03/13 15:22:23 by mtsubasa         ###   ########.fr       */
+/*   Updated: 2025/03/21 18:53:54 by mtsubasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,11 @@
 typedef struct sigaction	t_sa;
 
 # ifdef __linux__
-#  define WAIT_TIME 2000
+#  define WAIT_TIME 1125//2000
 # endif
 
 # ifdef __APPLE__
-#  define WAIT_TIME 50
+#  define WAIT_TIME 50//50
 # endif
 
 #endif

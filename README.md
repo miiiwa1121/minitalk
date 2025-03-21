@@ -518,7 +518,8 @@ int	ft_isspace(int c)
 - #### Q :usleepの目的は何？
 > A : server側の目的は、シグナル処理 (signal_handler)の途中にpause();が呼び出されることを防ぐためで、cliant側の目的は、serverの処理途中に次のシグナルを送信するのを防ぐため。
 
-
+- #### Q : ８ビット揃ったら出力する仕様なのに「あ」などの８ビット以上で表現されている文字が正しく出力されるのか？
+> A : /home/mtsubasa/Desktop/common/minitalk/try/4.cで検証してみると、write関数がうまい感じに認識してくれてることはわかったため、こちら側では何もしていない。
 ---
 ---
 ---

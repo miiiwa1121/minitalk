@@ -39,8 +39,7 @@ X = "\033[0m"   # リセット
 # ========================================================
 # ターゲット定義
 # ========================================================
-
-all: $(LIBFT_NAME) server client 
+NAME: $(LIBFT_NAME) server client 
 
 server: $(SERVER_OBJ)
 	@$(CC) $(CFLAGS) $(SERVER_OBJ) $(LIBFT_NAME) -o server
@@ -59,6 +58,8 @@ server_bonus: $(SERVER_BONUS_OBJ)
 client_bonus: $(CLIENT_BONUS_OBJ)
 	@$(CC) $(CFLAGS) $(CLIENT_BONUS_OBJ) $(LIBFT_NAME) -o client_bonus
 	@echo $(G) "client_bonus created!" $(X)
+
+all: $(LIBFT_NAME) server client server_bonus client_bonus
 
 # ========================================================
 # ビルドルール

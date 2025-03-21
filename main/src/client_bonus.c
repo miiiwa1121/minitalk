@@ -6,7 +6,7 @@
 /*   By: mtsubasa <mtsubasa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 04:33:07 by mtsubasa          #+#    #+#             */
-/*   Updated: 2025/02/26 15:34:12 by mtsubasa         ###   ########.fr       */
+/*   Updated: 2025/03/21 20:03:58 by mtsubasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,12 @@ void	send_message(int pid, char c)
 		if ((c & (1 << bit)) != 0)
 		{
 			if (kill(pid, SIGUSR1) == -1)
-				error_handler("Kill error", "SIGUSR1");
+				error_handler("Kill error ", "SIGUSR1");
 		}
 		else
 		{
 			if (kill(pid, SIGUSR2) == -1)
-				error_handler("Kill error", "SIGUSR2");
+				error_handler("Kill error ", "SIGUSR2");
 		}
 		usleep(WAIT_TIME);
 		bit++;
@@ -47,11 +47,11 @@ int	main(int ac, char **av)
 	int		index;
 
 	if (ac != 3)
-		error_handler("Invalid arguments", "Usage: ./client [PID] [message]");
+		error_handler("Invalid arguments ", "Usage: ./client [PID] [message]");
 	if (!bool_atoi(av[1], &pid))
-		error_handler("Invalid PID", "PID must be a positive integer");
+		error_handler("Invalid PID ", "PID must be a positive integer");
 	if (pid <= 0)
-		error_handler("Invalid PID", "PID must be a positive integer");
+		error_handler("Invalid PID ", "PID must be a positive integer");
 	sa.sa_handler = signal_handler;
 	sigemptyset(&sa.sa_mask);
 	if (sigaddset(&sa.sa_mask, SIGUSR1) == -1

@@ -6,7 +6,7 @@
 /*   By: mtsubasa <mtsubasa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 15:22:14 by jtakahas          #+#    #+#             */
-/*   Updated: 2025/03/17 15:57:02 by mtsubasa         ###   ########.fr       */
+/*   Updated: 2025/03/22 17:13:33 by mtsubasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,14 +25,18 @@ void	signal_handler(int signal, siginfo_t *info, void *context)
 		write(1, &c, 1);
 		bit = 0;
 		c = 0;
-		kill(info->si_pid, signal);
+		if (info->si_pid > 0) // NULL チェック
+			kill(info->si_pid, signal);// クライアントにACK（確認応答）を送信
+		//（SIGUSR1 または SIGUSR2）を返す。
+
+		// kill(info->si_pid, signal);
 	}
 	(void)context;
 }
 
 int	main(int ac, char **av)
 {
-	t_sa	sa;
+	struct sigaction	sa;
 
 	(void)av;
 	if (ac != 1)
@@ -40,7 +44,9 @@ int	main(int ac, char **av)
 
 	ft_printf("Server PID: %d\n", getpid());
 
-	sa.sa_sigaction = signal_handler;
+	sa.sa_flags = SA_SIGINFO;//sa_flags に SA_SIGINFO を設定すると、sa_sigactionがsa_handlerの代わりに呼ばれる。
+
+	sa.sa_sigaction = signal_handler;//より詳細な設定
 
 	sigemptyset(&sa.sa_mask);
 
@@ -49,8 +55,6 @@ int	main(int ac, char **av)
 
 	if (sigaction(SIGUSR1, &sa, NULL) == -1	|| sigaction(SIGUSR2, &sa, NULL) == -1)
 		error_handler("Sigaction error", NULL);
-
-	sa.sa_flags = 0;
 
 	while (1)
 	{

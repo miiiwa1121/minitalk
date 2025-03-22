@@ -6,7 +6,7 @@
 /*   By: mtsubasa <mtsubasa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 04:33:00 by mtsubasa          #+#    #+#             */
-/*   Updated: 2025/03/21 18:53:54 by mtsubasa         ###   ########.fr       */
+/*   Updated: 2025/03/22 19:21:03 by mtsubasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,8 @@
 # include "../all_libft/include/libft.h"
 # include <signal.h>
 
-typedef struct sigaction	t_sa;
-
 # ifdef __linux__
-#  define WAIT_TIME 1125//2000
+#  define WAIT_TIME 1250//2000
 # endif
 
 # ifdef __APPLE__

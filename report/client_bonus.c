@@ -6,16 +6,18 @@
 /*   By: mtsubasa <mtsubasa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 04:33:07 by mtsubasa          #+#    #+#             */
-/*   Updated: 2025/03/05 23:19:26 by mtsubasa         ###   ########.fr       */
+/*   Updated: 2025/03/22 17:01:20 by mtsubasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minitalk_bonus.h"
 
+// volatile sig_atomic_t ack_received = 0;
+
 void	signal_handler(int signal)
 {
 	if (signal == SIGUSR1 || signal == SIGUSR2)
-		write(1, "SIGUSR!!\n", 9);
+		write(1, "ACK!!SIGUSR!!\n", 14);
 }
 
 void	send_message(int pid, char c)
@@ -36,13 +38,17 @@ void	send_message(int pid, char c)
 				error_handler("Kill error", "SIGUSR2");
 		}
 		usleep(WAIT_TIME);
+		// pause();
+		// while (!ack_received) // ACKを受信するまで待機
+        //     pause();
 		bit++;
 	}
 }
 
 int	main(int ac, char **av)
 {
-	t_sa	sa;
+	// t_sa	sa;
+	struct sigaction	sa;
 	int		pid;
 	int		index;
 
@@ -55,7 +61,7 @@ int	main(int ac, char **av)
 	if (pid <= 0)
 		error_handler("Invalid PID", "PID must be a positive integer");
 
-	sa.sa_handler = signal_handler;
+	sa.sa_handler = signal_handler;//ACkを出力するため
 
 	sigemptyset(&sa.sa_mask);
 

@@ -6,7 +6,7 @@
 /*   By: mtsubasa <mtsubasa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 04:33:31 by mtsubasa          #+#    #+#             */
-/*   Updated: 2025/03/19 03:59:30 by mtsubasa         ###   ########.fr       */
+/*   Updated: 2025/03/22 16:11:02 by mtsubasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,20 @@ void	signal_handler(int signal)
 
 int	main(int ac, char **av)
 {
-	t_sa	sa;//シグナル処理の設定を保持する構造体
+		struct sigaction sa;//シグナル処理の設定を保持する構造体
 
 	(void)av;//このプログラムはサーバー側のプログラムであるため、引数は不要(未使用の引数を無視)
 	if (ac != 1)
 		error_handler("Invalid arguments", "Usage: ./server");//[./server]のみ受け付ける
 
 	ft_printf("Server PID: %d\n", getpid());//サーバーのプロセスIDを表示
+
+	//シグナル処理の設定を初期化	
+	sa.sa_flags = 0;
+//シグナルハンドリングの動作に関するオプションを設定するフィールドです。
+//このコードでは、sa_flags を 0 に設定して、特にフラグを設定していません。
+//これにより、デフォルトの挙動（シグナルが同期的に処理される）を使用することになります。
+//もし特別な動作（例えば、非同期処理や再起動など）を希望する場合は、この値を変更します
 
 //シグナルハンドラの設定
 	sa.sa_handler = signal_handler;//SIGUSR1とSIGUSR2のシグナルを受信した際にsignal_handler関数を実行するように設定
@@ -60,13 +67,6 @@ int	main(int ac, char **av)
 	if (sigaction(SIGUSR1, &sa, NULL) == -1	|| sigaction(SIGUSR2, &sa, NULL) == -1)//SIGUSR1とSIGUSR2のシグナル処理を設定(-1はエラー)
 		error_handler("Sigaction error", NULL);//sigactionが上手くいかなかった場合はエラーメッセージを表示してプログラムを終了
 //受信されたときに signal_handler 関数が呼ばれるように設定
-
-//シグナル処理の設定を初期化	
-	sa.sa_flags = 0;
-//シグナルハンドリングの動作に関するオプションを設定するフィールドです。
-//このコードでは、sa_flags を 0 に設定して、特にフラグを設定していません。
-//これにより、デフォルトの挙動（シグナルが同期的に処理される）を使用することになります。
-//もし特別な動作（例えば、非同期処理や再起動など）を希望する場合は、この値を変更します
 
 //無限ループ
 	while (1)

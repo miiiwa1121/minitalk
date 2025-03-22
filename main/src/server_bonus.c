@@ -6,7 +6,7 @@
 /*   By: mtsubasa <mtsubasa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 16:15:41 by mtsubasa          #+#    #+#             */
-/*   Updated: 2025/03/21 20:03:43 by mtsubasa         ###   ########.fr       */
+/*   Updated: 2025/03/22 17:31:58 by mtsubasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,19 +25,21 @@ void	signal_handler(int signal, siginfo_t *info, void *context)
 		write(1, &c, 1);
 		bit = 0;
 		c = 0;
-		kill(info->si_pid, signal);
+		if (info->si_pid > 0)
+			kill(info->si_pid, signal);
 	}
 	(void)context;
 }
 
 int	main(int ac, char **av)
 {
-	t_sa	sa;
+	struct sigaction	sa;
 
 	(void)av;
 	if (ac != 1)
 		error_handler("Invalid arguments ", "Usage: ./server");
 	ft_printf("Server PID: %d\n", getpid());
+	sa.sa_flags = SA_SIGINFO;
 	sa.sa_sigaction = signal_handler;
 	sigemptyset(&sa.sa_mask);
 	if (sigaddset(&sa.sa_mask, SIGUSR1) == -1
@@ -46,7 +48,6 @@ int	main(int ac, char **av)
 	if (sigaction(SIGUSR1, &sa, NULL) == -1
 		|| sigaction(SIGUSR2, &sa, NULL) == -1)
 		error_handler("Sigaction error", NULL);
-	sa.sa_flags = 0;
 	while (1)
 	{
 		pause();

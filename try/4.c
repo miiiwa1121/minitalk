@@ -8,7 +8,7 @@ write(1, &c, 1);
 c = (unsigned char)0b10100010;
 write(1, &c, 1); // この時点で3バイト分感知し、なにかの文字になったことで画面に表示されている
 
-これらのことから、server側が8ビットごとに出力しているのに関係なくwriteがうまい感じにバイトをまとめて認識し、ascii以外のunicodeなどの対応が可能になっていた。
+これらのことから、server側が8ビットごとに出力しているのに関係なくwriteがうまい感じにバイトをまとめて認識し、ascii以外のunicodeなどの対応が可能になっていた。おそらく８ビットのうちの先頭の値が１か０かで文字を表現するバイナリの区切りを判断している
 */
 
 #include <unistd.h>
@@ -22,6 +22,12 @@ int main(int ac, char **av)
 
     write(1, "\n", 1);
 
+    c = (unsigned char)0b01101100;//先頭が０
+    write(1, &c, 1);
+
+    write(1, "\n", 1);
+
+
     // 「ア」のUTF8の16進数　0xE3, 0x82, 0xA2
     c = (unsigned char)0xE3; 
     write(1, &c, 1);
@@ -32,7 +38,7 @@ int main(int ac, char **av)
 
     write(1, "\n", 1);
 
-    // 「ア」のUTF8のバイナリ　11100011 10000010 10000010
+    // 「ア」のUTF8のバイナリ　11100011 10000010 10000010//先頭が１
     c = (unsigned char)0b11100011; 
     write(1, &c, 1);
     c = (unsigned char)0b10000010;
